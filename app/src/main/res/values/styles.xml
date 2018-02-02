@@ -6,7 +6,6 @@
         <item name="colorPrimary">@color/asagi</item>
         <item name="colorPrimaryDark">@color/shinbashi</item>
         <item name="colorAccent">@color/mizu</item>
-        <item name="android:navigationBarColor">@color/asagi</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
