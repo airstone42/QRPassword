@@ -32,8 +32,19 @@ import com.example.airstone42.qrpassword.classes.PasswordData;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.FormBody;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -64,10 +75,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         final ListView listView = (ListView) findViewById(R.id.list_view);
         final List<PasswordData> dataList = new ArrayList<>();
-        Cursor data = dbHelper.getListData();
-        if (data.getCount() != 0) {
-            while (data.moveToNext()){
-                PasswordData passwordData = new PasswordData(Integer.parseInt(data.getString(0)), data.getString(1), data.getString(2), data.getString(3), data.getString(4));
+        Cursor cursor = dbHelper.getListData();
+        if (cursor.getCount() != 0) {
+            while (cursor.moveToNext()){
+                PasswordData passwordData = new PasswordData(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
                 dataList.add(passwordData);
                 DataAdapter dataAdapter = new DataAdapter(this, R.layout.list_item, dataList);
                 listView.setAdapter(dataAdapter);
@@ -241,12 +252,65 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
             } else {
                 Log.d("MainActivity", "Scanned");
-                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+                String codeContent = result.getContents();
+                try {
+                    JSONObject codeJSON = new JSONObject(codeContent);
+                    String hostname = codeJSON.getString("hostname");
+                    String randkey = codeJSON.getString("randkey");
+                    String username, password;
+                    final List<PasswordData> dataList = new ArrayList<>();
+                    Cursor cursor = dbHelper.getListData();
+                    Boolean found = false;
+                    if (cursor.getCount() != 0) {
+                        while (cursor.moveToNext()){
+                            if (cursor.getString(2).equals("http://" + hostname) || cursor.getString(2).equals("https://" + hostname)) {
+                                found = true;
+                                username = cursor.getString(3);
+                                password = cursor.getString(4);
+                                JSONObject infoJSON = new JSONObject();
+                                infoJSON.put("hostname", hostname);
+                                infoJSON.put("randkey", randkey);
+                                infoJSON.put("username", username);
+                                infoJSON.put("password", password);
+                                sendRequest(infoJSON.toString());
+                                Toast.makeText(this, "Succeeded", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                        if (!found) {
+                            Toast.makeText(this, "No matching result", Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        Toast.makeText(this, "Empty database", Toast.LENGTH_LONG).show();
+                    }
+                    //Toast.makeText(this, hostname + " " + randkey, Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    Toast.makeText(this, "Failed", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
             }
         } else {
             // This is important, otherwise the result will not be passed to the fragment
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    private void sendRequest(final String string) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    OkHttpClient client = new OkHttpClient();
+                    RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), string);
+                    Request request = new Request.Builder()
+                            .url("http://192.168.0.97/plugin/info.php")
+                            .post(requestBody)
+                            .build();
+                    client.newCall(request).execute();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 
 }
