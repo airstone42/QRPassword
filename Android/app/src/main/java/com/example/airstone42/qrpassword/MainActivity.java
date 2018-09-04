@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.util.Base64;
 import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.example.airstone42.qrpassword.classes.Crypto;
 import com.example.airstone42.qrpassword.classes.DataAdapter;
 import com.example.airstone42.qrpassword.classes.PasswordData;
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -39,7 +41,6 @@ import org.json.JSONTokener;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -255,8 +256,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 String codeContent = result.getContents();
                 try {
                     JSONObject codeJSON = new JSONObject(codeContent);
-                    String hostname = codeJSON.getString("hostname");
-                    String randkey = codeJSON.getString("randkey");
+                    String hostname = Crypto.decrypt(codeJSON.getString("hostname"));
+                    String randkey = Crypto.decrypt(codeJSON.getString("randkey"));
                     String username, password;
                     final List<PasswordData> dataList = new ArrayList<>();
                     Cursor cursor = dbHelper.getListData();
@@ -268,10 +269,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 username = cursor.getString(3);
                                 password = cursor.getString(4);
                                 JSONObject infoJSON = new JSONObject();
-                                infoJSON.put("hostname", hostname);
-                                infoJSON.put("randkey", randkey);
-                                infoJSON.put("username", username);
-                                infoJSON.put("password", password);
+                                infoJSON.put("hostname", Crypto.encrypt(hostname));
+                                infoJSON.put("randkey", Crypto.encrypt(randkey));
+                                infoJSON.put("username", Crypto.encrypt(username));
+                                infoJSON.put("password", Crypto.encrypt(password));
                                 sendRequest(infoJSON.toString());
                                 Toast.makeText(this, "Succeeded", Toast.LENGTH_LONG).show();
                             }
@@ -282,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     } else {
                         Toast.makeText(this, "Empty database", Toast.LENGTH_LONG).show();
                     }
-                    //Toast.makeText(this, hostname + " " + randkey, Toast.LENGTH_LONG).show();
+                    // Toast.makeText(this, hostname + " " + randkey, Toast.LENGTH_LONG).show();
                 } catch (JSONException e) {
                     Toast.makeText(this, "Failed", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
@@ -302,7 +303,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     OkHttpClient client = new OkHttpClient();
                     RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), string);
                     Request request = new Request.Builder()
-                            .url("http://192.168.0.97/plugin/info.php")
+                            .url("http://192.168.1.17/plugin/info.php")
                             .post(requestBody)
                             .build();
                     client.newCall(request).execute();

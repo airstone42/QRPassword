@@ -1,0 +1,27 @@
+{
+    "manifest_version": 2,
+    "name": "QR-Code Creater",
+    "version": "0.0.1",
+    "description": "plugin demo",
+    "icons": {
+        "1": "images/1.png"
+    },
+    "content_scripts": [{
+        "matches": ["<all_urls>"],
+        "all_frames": true,
+        "js":      ["content.js"]
+    }],
+    "permissions": [
+        "http://192.168.1.17/",
+        "tabs",
+        "activeTab"
+    ],
+    "browser_action": {
+        "default_action": {
+            "1": "images/1.png"
+        },
+        "default_title": "Create QRCode",
+        "default_popup": "popup.html"
+    },
+    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}
