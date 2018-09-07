@@ -21,44 +21,47 @@ function createCode() {
         var codeContent = {"hostname": btoa(url.hostname), "randkey": btoa(randkey)};
         var codeText = JSON.stringify(codeContent)
         var xhr = new XMLHttpRequest();
-        xhr.open("POST", "http://192.168.1.17/plugin/qrcode.php");
+        xhr.open("POST", "http://133.130.97.7/plugin/qrcode.php");
         xhr.setRequestHeader('Content-Type',' application/x-www-form-urlencoded');
         xhr.send(codeText);
         code.makeCode(codeText);
-        setTimeout(getInfo(), 100);
-    });
-}
-
-function getInfo() {
-    var xhr = new XMLHttpRequest();
-        xhr.open("GET", "http://192.168.1.17/plugin/info.json");
-        xhr.setRequestHeader('Content-Type',' application/x-www-form-urlencoded');
-        xhr.send();
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                if (xhr.responseText != "") {
-                    var infoJSON = JSON.parse(xhr.responseText);
-                    if (infoJSON.randkey == btoa(randkey)) {
-                        // alert("username: " + infoJSON.username + " password: " + infoJSON.password);
-                        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-                            chrome.tabs.sendMessage(tabs[0].id, {username: infoJSON.username, password: infoJSON.password}, function(response) {
-                                // console.log(response.success);
+        var ID = 0;
+        var getInfo = function() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "http://133.130.97.7/plugin/getinfo.php");
+            xhr.setRequestHeader('Content-Type',' application/x-www-form-urlencoded');
+            xhr.send();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    if (xhr.responseText != "") {
+                        var infoJSON = JSON.parse(xhr.responseText);
+                        if (infoJSON.randkey == btoa(randkey)) {
+                            clearTimeout(ID);
+                            // alert("username: " + infoJSON.username + " password: " + infoJSON.password);
+                            chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                                chrome.tabs.sendMessage(tabs[0].id, {username: infoJSON.username, password: infoJSON.password}, function(response) {
+                                    console.log(response.success);
+                                });
                             });
-                        });
-                        chrome.tabs.getSelected(null, function(tab) {
-                            var xhr = new XMLHttpRequest();
-                            xhr.open("POST", "http://192.168.1.17/plugin/info.php");
-                            xhr.setRequestHeader('Content-Type',' application/x-www-form-urlencoded');
-                            xhr.send("");
-                        });
+                            chrome.tabs.getSelected(null, function(tab) {
+                                var xhr = new XMLHttpRequest();
+                                xhr.open("POST", "http://133.130.97.7/plugin/setinfo.php");
+                                xhr.setRequestHeader('Content-Type',' application/x-www-form-urlencoded');
+                                xhr.send("");
+                            });
+                        } else {
+                            ID = setTimeout(getInfo, 500);
+                        }
                     } else {
-                        setTimeout(getInfo(), 100);
+                        ID = setTimeout(getInfo, 500);
                     }
                 } else {
-                    setTimeout(getInfo(), 100);
+                    ID = setTimeout(getInfo, 500);
                 }
             }
         }
+        ID = setTimeout(getInfo, 500);
+    });
 }
 
 createCode();

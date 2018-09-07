@@ -303,7 +303,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     OkHttpClient client = new OkHttpClient();
                     RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), string);
                     Request request = new Request.Builder()
-                            .url("http://192.168.1.17/plugin/info.php")
+                            .url("http://133.130.97.7/plugin/setinfo.php")
                             .post(requestBody)
                             .build();
                     client.newCall(request).execute();

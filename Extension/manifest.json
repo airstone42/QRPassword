@@ -1,6 +1,6 @@
 {
     "manifest_version": 2,
-    "name": "QR-Code Creater",
+    "name": "QR-Code Creator",
     "version": "0.0.1",
     "description": "plugin demo",
     "icons": {
@@ -12,7 +12,7 @@
         "js":      ["content.js"]
     }],
     "permissions": [
-        "http://192.168.1.17/",
+        "http://133.130.97.7/",
         "tabs",
         "activeTab"
     ],

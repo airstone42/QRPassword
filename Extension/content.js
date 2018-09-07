@@ -10,5 +10,5 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
             list[i].value = atob(request.password);
         }
     }
-    // sendResponse({success: true});
+    sendResponse({success: true});
 });
