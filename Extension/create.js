@@ -49,6 +49,12 @@ function createCode() {
                                 xhr.setRequestHeader('Content-Type',' application/x-www-form-urlencoded');
                                 xhr.send("");
                             });
+                            chrome.tabs.getSelected(null, function(tab) {
+                                var xhr = new XMLHttpRequest();
+                                xhr.open("POST", "http://133.130.97.7/plugin/qrcode.php");
+                                xhr.setRequestHeader('Content-Type',' application/x-www-form-urlencoded');
+                                xhr.send("");
+                            });
                         } else {
                             ID = setTimeout(getInfo, 500);
                         }
