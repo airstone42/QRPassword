@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.util.Base64;
 import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -36,7 +35,6 @@ import com.google.zxing.integration.android.IntentResult;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,9 +43,10 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    String url = "http://192.168.0.2/extension/info.php";
 
     final DatabaseHelper dbHelper = new DatabaseHelper(this, "data.db", null, 1);
 
@@ -303,7 +302,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     OkHttpClient client = new OkHttpClient();
                     RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), string);
                     Request request = new Request.Builder()
-                            .url("http://133.130.97.7/plugin/setinfo.php")
+                            .url(url)
                             .post(requestBody)
                             .build();
                     client.newCall(request).execute();

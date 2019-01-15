@@ -1,7 +1,11 @@
 chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
     var list = document.getElementsByTagName("input");
+    // alert(request.username + request.password);
     for (var i = 0; i < list.length && list[i]; i++) {
-        if (list[i].type == "text" && (list[i].id.indexOf("username") != -1 || list[i].name.indexOf("username") != -1)) {
+        if (list[i].type == "text" && (list[i].id.indexOf("username") != -1 ||
+                                        list[i].id.indexOf("mail") != -1) ||
+                                        list[i].name.indexOf("username") != -1 ||
+                                        list[i].name.indexOf("mail") != -1) {
             list[i].value = atob(request.username);
         } else if (list[i].type == "password" && (list[i].id.indexOf("password") != -1 ||
                                                   list[i].id.indexOf("passwd") != -1 ||
@@ -10,5 +14,5 @@ chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
             list[i].value = atob(request.password);
         }
     }
-    sendResponse({success: true});
+    // sendResponse({success: true});
 });

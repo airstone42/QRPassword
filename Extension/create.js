@@ -7,7 +7,7 @@ var code = new QRCode(document.getElementById('code'), {
 
 var randkey = rand(16);
 
-function rand(n){
+function rand(n) {
 	var rnd = "";
 	for(var i = 0; i < n; i++)
 		rnd += Math.floor(Math.random() * 10);
@@ -19,16 +19,16 @@ function createCode() {
     chrome.tabs.getSelected(null, function(tab) {
         var url = new URL(tab.url);
         var codeContent = {"hostname": btoa(url.hostname), "randkey": btoa(randkey)};
-        var codeText = JSON.stringify(codeContent)
+        var codeText = JSON.stringify(codeContent);
         var xhr = new XMLHttpRequest();
-        xhr.open("POST", "http://133.130.97.7/plugin/qrcode.php");
+        xhr.open("POST", "http://192.168.0.2/extension/qrcode.php");
         xhr.setRequestHeader('Content-Type',' application/x-www-form-urlencoded');
         xhr.send(codeText);
         code.makeCode(codeText);
         var ID = 0;
         var getInfo = function() {
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "http://133.130.97.7/plugin/getinfo.php");
+            xhr.open("GET", "http://192.168.0.2/extension/info.php");
             xhr.setRequestHeader('Content-Type',' application/x-www-form-urlencoded');
             xhr.send();
             xhr.onreadystatechange = function() {
@@ -40,18 +40,18 @@ function createCode() {
                             // alert("username: " + infoJSON.username + " password: " + infoJSON.password);
                             chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
                                 chrome.tabs.sendMessage(tabs[0].id, {username: infoJSON.username, password: infoJSON.password}, function(response) {
-                                    console.log(response.success);
+                                    // console.log(response.success);
                                 });
                             });
                             chrome.tabs.getSelected(null, function(tab) {
                                 var xhr = new XMLHttpRequest();
-                                xhr.open("POST", "http://133.130.97.7/plugin/setinfo.php");
+                                xhr.open("POST", "http://192.168.0.2/extension/info.php");
                                 xhr.setRequestHeader('Content-Type',' application/x-www-form-urlencoded');
                                 xhr.send("");
                             });
                             chrome.tabs.getSelected(null, function(tab) {
                                 var xhr = new XMLHttpRequest();
-                                xhr.open("POST", "http://133.130.97.7/plugin/qrcode.php");
+                                xhr.open("POST", "http://192.168.0.2/extension/qrcode.php");
                                 xhr.setRequestHeader('Content-Type',' application/x-www-form-urlencoded');
                                 xhr.send("");
                             });

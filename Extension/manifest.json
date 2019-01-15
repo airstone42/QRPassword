@@ -12,7 +12,7 @@
         "js":      ["content.js"]
     }],
     "permissions": [
-        "http://133.130.97.7/",
+        "http://192.168.0.2/",
         "tabs",
         "activeTab"
     ],
