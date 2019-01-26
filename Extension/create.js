@@ -15,7 +15,7 @@ function rand(n) {
 }
 
 function createCode() {
-    var info = new String("");
+    var info = "";
     chrome.tabs.getSelected(null, function(tab) {
         var url = new URL(tab.url);
         var codeContent = {"hostname": btoa(url.hostname), "randkey": btoa(randkey)};
@@ -64,8 +64,8 @@ function createCode() {
                 } else {
                     ID = setTimeout(getInfo, 500);
                 }
-            }
-        }
+            };
+        };
         ID = setTimeout(getInfo, 500);
     });
 }

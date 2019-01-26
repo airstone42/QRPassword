@@ -8,8 +8,7 @@ public class PasswordData {
     private String username;
     private String password;
 
-    public PasswordData() {
-    }
+    public PasswordData() { }
 
     public PasswordData(int id, String website, String url, String username, String password) {
         this.id = id;

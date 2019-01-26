@@ -2,6 +2,9 @@ package com.example.airstone42.qrpassword.classes;
 
 import android.util.Base64;
 
+import javax.crypto.Cipher;
+import javax.crypto.SecretKeyFactory;
+
 public class Crypto {
 
     public static String encrypt(String plain) {
@@ -11,5 +14,7 @@ public class Crypto {
     public static String decrypt(String encrypted) {
         return new String(Base64.decode(encrypted.getBytes(), Base64.DEFAULT));
     }
+
+    public static void main(String[] args) { }
 
 }
