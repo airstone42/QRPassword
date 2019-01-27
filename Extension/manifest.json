@@ -4,7 +4,7 @@
     "version": "0.0.1",
     "description": "plugin demo",
     "icons": {
-        "1": "images/1.png"
+        "1": "images/popup.png"
     },
     "content_scripts": [{
         "matches": ["<all_urls>"],
@@ -18,7 +18,7 @@
     ],
     "browser_action": {
         "default_action": {
-            "1": "images/1.png"
+            "1": "images/popup.png"
         },
         "default_title": "Create QRCode",
         "default_popup": "popup.html"

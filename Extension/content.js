@@ -1,17 +1,31 @@
-chrome.runtime.onMessage.addListener( function(request, sender, sendResponse) {
+function isUsername(item) {
+    if (item.id.indexOf("username") != -1 ||
+        item.id.indexOf("mail") != -1 ||
+        item.name.indexOf("username") != -1 ||
+        item.name.indexOf("mail") != -1)
+        return true;
+    else
+        return false;
+}
+
+function isPassword(item) {
+    if (item.id.indexOf("password") != -1 ||
+        item.id.indexOf("passwd") != -1 ||
+        item.name.indexOf("password") != -1 ||
+        item.name.indexOf("passwd") != -1)
+        return true;
+    else
+        return false;
+}
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     var list = document.getElementsByTagName("input");
     // alert(request.username + request.password);
     for (var i = 0; i < list.length && list[i]; i++) {
-        if (list[i].type == "text" && (list[i].id.indexOf("username") != -1 ||
-                                        list[i].id.indexOf("mail") != -1) ||
-                                        list[i].name.indexOf("username") != -1 ||
-                                        list[i].name.indexOf("mail") != -1) {
-            list[i].value = atob(request.username);
-        } else if (list[i].type == "password" && (list[i].id.indexOf("password") != -1 ||
-                                                  list[i].id.indexOf("passwd") != -1 ||
-                                                  list[i].name.indexOf("password") != -1 ||
-                                                  list[i].name.indexOf("passwd") != -1)) {
-            list[i].value = atob(request.password);
+        if (list[i].type == "text" && isUsername(list[i])) {
+            list[i].value = decodeBase64(request.username);
+        } else if (list[i].type == "password" && isPassword(list[i])) {
+            list[i].value = decodeBase64(request.password);
         }
     }
     // sendResponse({success: true});
