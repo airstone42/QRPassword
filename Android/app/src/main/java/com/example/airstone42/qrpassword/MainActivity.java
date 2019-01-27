@@ -89,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         showListView();
-
     }
 
     @Override
@@ -255,12 +254,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 String codeContent = result.getContents();
                 try {
                     JSONObject codeJSON = new JSONObject(codeContent);
-                    String hostname = Crypto.decrypt(codeJSON.getString("hostname"));
-                    String randkey = Crypto.decrypt(codeJSON.getString("randkey"));
+                    String secretKey = Crypto.decode(codeJSON.getString("secretkey"));
+                    String initVector = Crypto.decode(codeJSON.getString("initvector")); // 16 bytes IV
+                    String randKey = Crypto.decode(codeJSON.getString("randkey"));
+                    String hostname = Crypto.decrypt(secretKey, initVector, codeJSON.getString("hostname"));
                     String username, password;
                     final List<PasswordData> dataList = new ArrayList<>();
                     Cursor cursor = dbHelper.getListData();
-                    Boolean found = false;
+                    boolean found = false;
                     if (cursor.getCount() != 0) {
                         while (cursor.moveToNext()){
                             if (cursor.getString(2).equals("http://" + hostname) || cursor.getString(2).equals("https://" + hostname)) {
@@ -268,10 +269,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 username = cursor.getString(3);
                                 password = cursor.getString(4);
                                 JSONObject infoJSON = new JSONObject();
-                                infoJSON.put("hostname", Crypto.encrypt(hostname));
-                                infoJSON.put("randkey", Crypto.encrypt(randkey));
-                                infoJSON.put("username", Crypto.encrypt(username));
-                                infoJSON.put("password", Crypto.encrypt(password));
+                                infoJSON.put("randkey", Crypto.encode(randKey));
+                                infoJSON.put("hostname", Crypto.encrypt(secretKey, initVector, hostname));
+                                infoJSON.put("username", Crypto.encrypt(secretKey, initVector, username));
+                                infoJSON.put("password", Crypto.encrypt(secretKey, initVector, password));
                                 sendRequest(infoJSON.toString());
                                 Toast.makeText(this, "Succeeded", Toast.LENGTH_LONG).show();
                             }
