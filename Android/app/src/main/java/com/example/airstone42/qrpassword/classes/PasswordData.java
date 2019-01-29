@@ -1,7 +1,6 @@
 package com.example.airstone42.qrpassword.classes;
 
 public class PasswordData {
-
     private int id;
     private String website;
     private String url;
@@ -35,5 +34,4 @@ public class PasswordData {
     public String getPassword() {
         return this.password;
     }
-
 }

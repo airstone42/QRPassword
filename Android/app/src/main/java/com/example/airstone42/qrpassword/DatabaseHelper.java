@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-
     public static final String CREATE_PASSWD = "create table passwd ("
             + "id integer primary key autoincrement, "
             + "website text, "
@@ -37,5 +36,4 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor data = db.rawQuery("select * from passwd", null);
         return data;
     }
-
 }

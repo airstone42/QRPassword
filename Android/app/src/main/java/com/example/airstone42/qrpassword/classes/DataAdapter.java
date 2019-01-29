@@ -12,7 +12,6 @@ import com.example.airstone42.qrpassword.R;
 import java.util.List;
 
 public class DataAdapter extends ArrayAdapter<PasswordData> {
-
     public int resourseId;
 
     public DataAdapter(Context context, int textViewResourceId, List<PasswordData> objects) {
@@ -30,5 +29,4 @@ public class DataAdapter extends ArrayAdapter<PasswordData> {
         itemUsername.setText(passwordData.getUsername());
         return view;
     }
-
 }

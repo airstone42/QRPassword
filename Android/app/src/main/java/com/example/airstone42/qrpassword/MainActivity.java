@@ -26,7 +26,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.example.airstone42.qrpassword.classes.Crypto;
 import com.example.airstone42.qrpassword.classes.DataAdapter;
 import com.example.airstone42.qrpassword.classes.PasswordData;
@@ -45,9 +44,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-
-    String url = "http://192.168.0.2/extension/info.php";
-
+    String serverURL = "http://192.168.0.2/extension/info.php";
     final DatabaseHelper dbHelper = new DatabaseHelper(this, "data.db", null, 1);
 
     @Override
@@ -57,8 +54,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -247,8 +243,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if(result != null) {
             if(result.getContents() == null) {
-                Log.d("MainActivity", "Cancelled scan");
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+                Log.d("MainActivity", "Canceled scan");
+                Toast.makeText(this, "Canceled", Toast.LENGTH_LONG).show();
             } else {
                 Log.d("MainActivity", "Scanned");
                 String codeContent = result.getContents();
@@ -303,7 +299,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     OkHttpClient client = new OkHttpClient();
                     RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), string);
                     Request request = new Request.Builder()
-                            .url(url)
+                            .url(serverURL)
                             .post(requestBody)
                             .build();
                     client.newCall(request).execute();
@@ -313,5 +309,4 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }).start();
     }
-
 }

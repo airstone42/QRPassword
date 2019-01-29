@@ -8,11 +8,10 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class Crypto {
-
-    public static String encrypt(String key, String initVector, String plain) {
+    public static String encrypt(String secretKey, String initVector, String plain) {
         try {
             IvParameterSpec iv = new IvParameterSpec(initVector.getBytes(StandardCharsets.UTF_8));
-            SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES");
+            SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), "AES");
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(Cipher.ENCRYPT_MODE, keySpec, iv);
             byte[] origin = plain.getBytes(StandardCharsets.UTF_8);
@@ -46,5 +45,4 @@ public class Crypto {
     }
 
     public static void main(String[] args) { }
-
 }
