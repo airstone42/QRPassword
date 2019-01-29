@@ -23,9 +23,9 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     // alert(request.username + request.password);
     for (var i = 0; i < list.length && list[i]; i++) {
         if (list[i].type == "text" && isUsername(list[i])) {
-            list[i].value = decodeBase64(request.username);
+            list[i].value = atob(request.username);
         } else if (list[i].type == "password" && isPassword(list[i])) {
-            list[i].value = decodeBase64(request.password);
+            list[i].value = atob(request.password);
         }
     }
     // sendResponse({success: true});

@@ -1,8 +1,8 @@
 function rand(n) {
-	var rnd = "";
+	var rand = "";
 	for(var i = 0; i < n; i++)
-		rnd += Math.floor(Math.random() * 10);
-	return rnd;
+		rand += Math.floor(Math.random() * 10);
+	return rand;
 }
 
 function createCode() {
@@ -11,8 +11,8 @@ function createCode() {
     chrome.tabs.getSelected(null, function(tab) {
         var url = new URL(tab.url);
         var codeContent = {
-            "hostname": encodeBase64(url.hostname),
-            "randkey": encodeBase64(randkey)
+            "hostname": btoa(url.hostname),
+            "randkey": btoa(randkey)
         };
         var codeText = JSON.stringify(codeContent);
         var xhr = new XMLHttpRequest();
@@ -30,7 +30,7 @@ function createCode() {
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     if (xhr.responseText != "") {
                         var infoJSON = JSON.parse(xhr.responseText);
-                        if (infoJSON.randkey == encodeBase64(randkey)) {
+                        if (infoJSON.randkey == btoa(randkey)) {
                             clearTimeout(ID);
                             // alert("username: " + infoJSON.username + " password: " + infoJSON.password);
                             chrome.tabs.query({
