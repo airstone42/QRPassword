@@ -37,6 +37,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -250,9 +251,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 String codeContent = result.getContents();
                 try {
                     JSONObject codeJSON = new JSONObject(codeContent);
-                    String secretKey = Crypto.decode(codeJSON.getString("secretkey"));
-                    String initVector = Crypto.decode(codeJSON.getString("initvector")); // 16 bytes IV
-                    String randKey = Crypto.decode(codeJSON.getString("randkey"));
+                    String randomKey = codeJSON.getString("randkey");
+                    String secretKey = codeJSON.getString("skey");
+                    String initVector = codeJSON.getString("iv");
                     String hostname = Crypto.decrypt(secretKey, initVector, codeJSON.getString("hostname"));
                     String username, password;
                     final List<PasswordData> dataList = new ArrayList<>();
@@ -265,10 +266,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 username = cursor.getString(3);
                                 password = cursor.getString(4);
                                 JSONObject infoJSON = new JSONObject();
-                                infoJSON.put("randkey", Crypto.encode(randKey));
-                                infoJSON.put("hostname", Crypto.encrypt(secretKey, initVector, hostname));
-                                infoJSON.put("username", Crypto.encrypt(secretKey, initVector, username));
-                                infoJSON.put("password", Crypto.encrypt(secretKey, initVector, password));
+                                infoJSON.put("randkey", randomKey.replaceAll("\\r|\\n", ""));
+                                infoJSON.put("skey", secretKey.replaceAll("\\r|\\n", ""));
+                                infoJSON.put("iv", initVector.replaceAll("\\r|\\n", ""));
+                                infoJSON.put("hostname", Objects.requireNonNull(Crypto.encrypt(secretKey, initVector, hostname)).replaceAll("\\r|\\n", ""));
+                                infoJSON.put("username", Objects.requireNonNull(Crypto.encrypt(secretKey, initVector, username)).replaceAll("\\r|\\n", ""));
+                                infoJSON.put("password", Objects.requireNonNull(Crypto.encrypt(secretKey, initVector, password)).replaceAll("\\r|\\n", ""));
                                 sendRequest(infoJSON.toString());
                                 Toast.makeText(this, "Succeeded", Toast.LENGTH_LONG).show();
                             }

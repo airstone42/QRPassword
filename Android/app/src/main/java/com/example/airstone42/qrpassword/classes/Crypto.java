@@ -15,17 +15,17 @@ public class Crypto {
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(Cipher.ENCRYPT_MODE, keySpec, iv);
             byte[] origin = plain.getBytes(StandardCharsets.UTF_8);
-            return new String(Base64.encode(cipher.doFinal(origin), Base64.NO_WRAP | Base64.URL_SAFE));
+            return new String(Base64.encode(cipher.doFinal(origin), Base64.DEFAULT));
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static String decrypt(String key, String initVector, String encrypted) {
+    public static String decrypt(String secretKey, String initVector, String encrypted) {
         try {
             IvParameterSpec iv = new IvParameterSpec(initVector.getBytes(StandardCharsets.UTF_8));
-            SecretKeySpec keySpec = new SecretKeySpec(key.getBytes(StandardCharsets.UTF_8), "AES");
+            SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), "AES");
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(Cipher.DECRYPT_MODE, keySpec, iv);
             byte[] origin = cipher.doFinal(Base64.decode(encrypted.getBytes(), Base64.DEFAULT));

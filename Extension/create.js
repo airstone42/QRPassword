@@ -1,8 +1,8 @@
 function rand(n) {
-	var rand = "";
-	for(var i = 0; i < n; i++)
-		rand += Math.floor(Math.random() * 10);
-	return rand;
+    var rand = "";
+    for(var i = 0; i < n; i++)
+        rand += Math.floor(Math.random() * 10);
+    return rand;
 }
 
 function createCode() {
@@ -11,11 +11,15 @@ function createCode() {
     chrome.tabs.getSelected(null, function(tab) {
         var url = new URL(tab.url);
         var codeContent = {
-            "hostname": btoa(url.hostname),
-            "randkey": btoa(randkey)
+            "randkey": randomKey,
+            "skey": secretKey,
+            "iv": initVector,
+            "hostname": encrypt(secretKey, initVector, url.hostname)
         };
         var codeText = JSON.stringify(codeContent);
         var xhr = new XMLHttpRequest();
+        console.log(codeText);
+        console.log(decrypt(secretKey, initVector, codeContent.hostname));
         xhr.open("POST", server + "/extension/qrcode.php");
         xhr.setRequestHeader('Content-Type',' application/x-www-form-urlencoded');
         xhr.send(codeText);
@@ -30,33 +34,32 @@ function createCode() {
                 if (xhr.readyState == 4 && xhr.status == 200) {
                     if (xhr.responseText != "") {
                         var infoJSON = JSON.parse(xhr.responseText);
-                        if (infoJSON.randkey == btoa(randkey)) {
+                        if (infoJSON.randkey == randomKey) {
                             clearTimeout(ID);
-                            // alert("username: " + infoJSON.username + " password: " + infoJSON.password);
                             chrome.tabs.query({
                                 active: true,
                                 currentWindow: true
                             }, function(tabs) {
                                 chrome.tabs.sendMessage(tabs[0].id, {
-                                    username: infoJSON.username,
-                                    password: infoJSON.password
+                                    username: decrypt(infoJSON.skey, infoJSON.iv, infoJSON.username),
+                                    password: decrypt(infoJSON.skey, infoJSON.iv, infoJSON.password)
                                 }, function(response) {
-                                    // console.log(response.success);
+                                    console.log(response.success);
+                                    /** Clear webpage info **/
+                                    chrome.tabs.getSelected(null, function(tab) {
+                                        var xhr = new XMLHttpRequest();
+                                        xhr.open("POST", server + "/extension/info.php");
+                                        xhr.setRequestHeader('Content-Type',' application/x-www-form-urlencoded');
+                                        xhr.send("");
+                                    });
+                                    /** Clear user info **/
+                                    chrome.tabs.getSelected(null, function(tab) {
+                                        var xhr = new XMLHttpRequest();
+                                        xhr.open("POST", server + "/extension/qrcode.php");
+                                        xhr.setRequestHeader('Content-Type',' application/x-www-form-urlencoded');
+                                        xhr.send("");
+                                    });
                                 });
-                            });
-                            /** Clear webpage info **/
-                            chrome.tabs.getSelected(null, function(tab) {
-                                var xhr = new XMLHttpRequest();
-                                xhr.open("POST", server + "/extension/info.php");
-                                xhr.setRequestHeader('Content-Type',' application/x-www-form-urlencoded');
-                                xhr.send("");
-                            });
-                            /** Clear user info **/
-                            chrome.tabs.getSelected(null, function(tab) {
-                                var xhr = new XMLHttpRequest();
-                                xhr.open("POST", server + "/extension/qrcode.php");
-                                xhr.setRequestHeader('Content-Type',' application/x-www-form-urlencoded');
-                                xhr.send("");
                             });
                         } else {
                             ID = setTimeout(getInfo, 500);
@@ -80,6 +83,8 @@ var code = new QRCode(document.getElementById('code'), {
     correctLevel: QRCode.CorrectLevel.H
 });
 
-var randkey = rand(16);
+var randomKey = rand(16);
+var secretKey = rand(16);
+var initVector = rand(16);
 
 createCode();
