@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -248,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(this, "Canceled", Toast.LENGTH_LONG).show();
             } else {
                 Log.d("MainActivity", "Scanned");
-                String codeContent = result.getContents();
+                String codeContent = new String(Base64.decode(result.getContents(), Base64.DEFAULT));
                 try {
                     JSONObject codeJSON = new JSONObject(codeContent);
                     String randomKey = codeJSON.getString("randkey");

@@ -36,13 +36,5 @@ public class Crypto {
         return null;
     }
 
-    public static String encode(String plain) {
-        return new String(Base64.encode(plain.getBytes(), Base64.NO_WRAP | Base64.URL_SAFE));
-    }
-
-    public static String decode(String encrypted) {
-        return new String(Base64.decode(encrypted.getBytes(), Base64.DEFAULT));
-    }
-
     public static void main(String[] args) { }
 }

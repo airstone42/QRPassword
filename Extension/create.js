@@ -16,10 +16,8 @@ function createCode() {
             "iv": initVector,
             "hostname": encrypt(secretKey, initVector, url.hostname)
         };
-        var codeText = JSON.stringify(codeContent);
+        var codeText = btoa(JSON.stringify(codeContent));
         var xhr = new XMLHttpRequest();
-        console.log(codeText);
-        console.log(decrypt(secretKey, initVector, codeContent.hostname));
         xhr.open("POST", server + "/extension/qrcode.php");
         xhr.setRequestHeader('Content-Type',' application/x-www-form-urlencoded');
         xhr.send(codeText);
