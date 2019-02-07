@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
     "name": "QR-Code Creator",
-    "version": "0.0.1",
-    "description": "plugin demo",
+    "version": "0.1.0",
+    "description": "An extension to process encrypted password information from Android by communicating in QR Code, and auto fill them in web pages.",
     "icons": {
         "1": "images/popup.png"
     },

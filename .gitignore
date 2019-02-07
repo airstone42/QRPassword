@@ -1,9 +1,7 @@
 *.iml
-/Android/.idea
+.idea
 /Android/.gradle
 /Android/local.properties
-/Android/.idea/workspace.xml
-/Android/.idea/libraries
 .DS_Store
 /Android/build
 /Android/captures

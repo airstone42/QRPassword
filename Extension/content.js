@@ -1,31 +1,28 @@
+const usernames = ["name", "mail", "Name", "Mail"]
+const passwords = ["pass", "Pass"]
+
 function isUsername(item) {
-    if (item.id.indexOf("username") != -1 ||
-        item.id.indexOf("mail") != -1 ||
-        item.name.indexOf("username") != -1 ||
-        item.name.indexOf("mail") != -1)
-        return true;
-    else
-        return false;
+    let flag = false
+    for (let username of usernames)
+        flag = item.id.includes(username) || item.name.includes(username) || flag
+    return flag
 }
 
 function isPassword(item) {
-    if (item.id.indexOf("password") != -1 ||
-        item.id.indexOf("passwd") != -1 ||
-        item.name.indexOf("password") != -1 ||
-        item.name.indexOf("passwd") != -1)
-        return true;
-    else
-        return false;
+    let flag = false
+    for (let password of passwords)
+        flag = item.id.includes(password) || item.name.includes(password) || flag
+    return flag
 }
 
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    var list = document.getElementsByTagName("input");
-    for (var i = 0; i < list.length && list[i]; i++) {
-        if (list[i].type == "text" && isUsername(list[i])) {
-            list[i].value = request.username;
-        } else if (list[i].type == "password" && isPassword(list[i])) {
-            list[i].value = request.password;
+    let list = document.getElementsByTagName('input')
+    for (let i = 0; i < list.length && list[i]; i++) {
+        if (list[i].type === "text" && isUsername(list[i])) {
+            list[i].value = request.username
+        } else if (list[i].type === "password" && isPassword(list[i])) {
+            list[i].value = request.password
         }
     }
-    sendResponse({success: true});
-});
+    sendResponse({success: true})
+})
