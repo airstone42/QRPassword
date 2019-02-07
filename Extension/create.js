@@ -20,6 +20,8 @@ function rand(n) {
 
 function createCode() {
     var info = "";
+    var count = 0;
+    var flag = false;
     chrome.tabs.getSelected(null, function(tab) {
         var url = new URL(tab.url);
         var codeContent = {
@@ -37,7 +39,6 @@ function createCode() {
         })));
         code.makeCode(btoa(JSON.stringify(codeContent)));
         var ID = 0;
-        var count = 0;
         var getInfo = function() {
             var xhr = new XMLHttpRequest();
             xhr.open("GET", serverURL + "/extension/info.php");
@@ -49,6 +50,7 @@ function createCode() {
                         var infoJSON = JSON.parse(xhr.responseText);
                         if (infoJSON.randkey == randomKey) {
                             clearTimeout(ID);
+                            flag = true;
                             chrome.tabs.query({
                                 active: true,
                                 currentWindow: true
@@ -74,18 +76,23 @@ function createCode() {
                                     });
                                 });
                             });
-                        } else {
-                            ID = setTimeout(getInfo, 500);
-                        }
-                    } else {
-                        ID = setTimeout(getInfo, 500);
-                    }
-                } else {
-                    ID = setTimeout(getInfo, 500);
-                }
+                        } else
+                            flag = false;
+                    } else
+                        flag = false;
+                } else
+                    flag = false;
             };
+            if (!flag && count <= 20) {
+                count++;
+                ID = setTimeout(getInfo, 500);
+            } else if (count > 20) {
+                clearTimeout(ID);
+                var hint = "<h1>Timeout!</h1>" + "<p>Please click again.</p>";
+                document.getElementById("code").innerHTML = hint;
+            }
         };
-        ID = setTimeout(getInfo, 500);
+        getInfo();
     });
 }
 
