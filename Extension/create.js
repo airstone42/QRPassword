@@ -7,7 +7,7 @@ const code = new QRCode(document.getElementById('code'), {
     correctLevel: QRCode.CorrectLevel.H
 })
 
-const randomKey = rand(16)
+const sessionID = rand(16)
 const secretKey = rand(16)
 const initVector = rand(16)
 
@@ -24,7 +24,7 @@ function createCode() {
     chrome.tabs.query({active: true}, tab => {
         const url = new URL(tab[0].url)
         const codeContent = {
-            randkey: randomKey,
+            id: sessionID,
             skey: secretKey,
             iv: initVector,
             hostname: encrypt(secretKey, initVector, url.hostname)
@@ -33,7 +33,7 @@ function createCode() {
         xhr.open("POST", serverURL + "/extension/qrcode.php")
         xhr.setRequestHeader('Content-Type',' application/x-www-form-urlencoded')
         xhr.send(btoa(JSON.stringify({
-          randkey: codeContent.randkey,
+          id: codeContent.id,
           hostname: codeContent.hostname
         })))
         code.makeCode(btoa(JSON.stringify(codeContent)))
@@ -47,7 +47,7 @@ function createCode() {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     if (xhr.responseText) {
                         const infoJSON = JSON.parse(xhr.responseText)
-                        if (infoJSON.randkey === randomKey) {
+                        if (infoJSON.id === sessionID) {
                             clearTimeout(ID)
                             flag = true
                             chrome.tabs.query({

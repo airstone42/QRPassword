@@ -8,6 +8,8 @@ import android.view.KeyEvent;
 import com.journeyapps.barcodescanner.CaptureManager;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 
+import java.util.Objects;
+
 public class ToolbarCaptureActivity extends AppCompatActivity {
     private CaptureManager capture;
     private DecoratedBarcodeView barcodeScannerView;
@@ -19,7 +21,7 @@ public class ToolbarCaptureActivity extends AppCompatActivity {
         setContentView(R.layout.activity_capture);
         Toolbar toolbar = (Toolbar) findViewById(R.id.scan_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         barcodeScannerView = (DecoratedBarcodeView)findViewById(R.id.zxing_scanner);
 

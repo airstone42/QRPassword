@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.util.Base64;
@@ -150,7 +151,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_camera) {
             return true;
@@ -252,12 +253,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 String codeContent = new String(Base64.decode(result.getContents(), Base64.DEFAULT));
                 try {
                     JSONObject codeJSON = new JSONObject(codeContent);
-                    String randomKey = codeJSON.getString("randkey");
+                    String sessionID = codeJSON.getString("id");
                     String secretKey = codeJSON.getString("skey");
                     String initVector = codeJSON.getString("iv");
                     String hostname = Crypto.decrypt(secretKey, initVector, codeJSON.getString("hostname"));
                     String username, password;
-                    final List<PasswordData> dataList = new ArrayList<>();
                     Cursor cursor = dbHelper.getListData();
                     boolean found = false;
                     if (cursor.getCount() != 0) {
@@ -267,12 +267,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 username = cursor.getString(3);
                                 password = cursor.getString(4);
                                 JSONObject infoJSON = new JSONObject();
-                                infoJSON.put("randkey", randomKey.replaceAll("\\r|\\n", ""));
-                                infoJSON.put("skey", secretKey.replaceAll("\\r|\\n", ""));
-                                infoJSON.put("iv", initVector.replaceAll("\\r|\\n", ""));
-                                infoJSON.put("hostname", Objects.requireNonNull(Crypto.encrypt(secretKey, initVector, hostname)).replaceAll("\\r|\\n", ""));
-                                infoJSON.put("username", Objects.requireNonNull(Crypto.encrypt(secretKey, initVector, username)).replaceAll("\\r|\\n", ""));
-                                infoJSON.put("password", Objects.requireNonNull(Crypto.encrypt(secretKey, initVector, password)).replaceAll("\\r|\\n", ""));
+                                infoJSON.put("id", sessionID.replaceAll("[\\r\\n]", ""));
+                                infoJSON.put("hostname", Objects.requireNonNull(Crypto.encrypt(secretKey, initVector, hostname)).replaceAll("[\\r\\n]", ""));
+                                infoJSON.put("username", Objects.requireNonNull(Crypto.encrypt(secretKey, initVector, username)).replaceAll("[\\r\\n]", ""));
+                                infoJSON.put("password", Objects.requireNonNull(Crypto.encrypt(secretKey, initVector, password)).replaceAll("[\\r\\n]", ""));
                                 sendRequest(infoJSON.toString());
                                 Toast.makeText(this, "Succeeded", Toast.LENGTH_LONG).show();
                             }
@@ -283,7 +281,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     } else {
                         Toast.makeText(this, "Empty database", Toast.LENGTH_LONG).show();
                     }
-                    // Toast.makeText(this, hostname + " " + randkey, Toast.LENGTH_LONG).show();
+                    // Toast.makeText(this, hostname + " " + id, Toast.LENGTH_LONG).show();
                 } catch (JSONException e) {
                     Toast.makeText(this, "Failed", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
