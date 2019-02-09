@@ -1,4 +1,4 @@
-const serverURL = "http://192.168.0.2"
+const serverURL = "http://192.168.0.2/extension"
 
 const code = new QRCode(document.getElementById('code'), {
     width: 300,
@@ -29,26 +29,20 @@ function createCode() {
             iv: initVector,
             hostname: encrypt(secretKey, initVector, url.hostname)
         }
-        let xhr = new XMLHttpRequest()
-        xhr.open("POST", serverURL + "/extension/qrcode.php")
-        xhr.setRequestHeader('Content-Type',' application/x-www-form-urlencoded')
-        xhr.send(btoa(JSON.stringify({
-          id: codeContent.id,
-          hostname: codeContent.hostname
-        })))
         code.makeCode(btoa(JSON.stringify(codeContent)))
-        let ID = 0
+        console.log(JSON.stringify(codeContent))
+        let poll = 0
         let getInfo = () => {
             let xhr = new XMLHttpRequest()
-            xhr.open("GET", serverURL + "/extension/info.php")
+            xhr.open("GET", serverURL + "/?id=" + codeContent.id)
             xhr.setRequestHeader('Content-Type',' application/x-www-form-urlencoded')
             xhr.send()
             xhr.onreadystatechange = () => {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     if (xhr.responseText) {
                         const infoJSON = JSON.parse(xhr.responseText)
-                        if (infoJSON.id === sessionID) {
-                            clearTimeout(ID)
+                        if (infoJSON.hostname === codeContent.hostname) {
+                            clearTimeout(poll)
                             flag = true
                             chrome.tabs.query({
                                 active: true,
@@ -59,20 +53,6 @@ function createCode() {
                                     password: decrypt(codeContent.skey, codeContent.iv, infoJSON.password)
                                 }, function(response) {
                                     console.log(response.success)
-                                    /** Clear webpage info **/
-                                    chrome.tabs.query({active: true}, tab => {
-                                        let xhr = new XMLHttpRequest()
-                                        xhr.open("POST", serverURL + "/extension/info.php")
-                                        xhr.setRequestHeader('Content-Type',' application/x-www-form-urlencoded')
-                                        xhr.send("")
-                                    })
-                                    /** Clear user info **/
-                                    chrome.tabs.query({active: true}, tab => {
-                                        let xhr = new XMLHttpRequest()
-                                        xhr.open("POST", serverURL + "/extension/qrcode.php")
-                                        xhr.setRequestHeader('Content-Type',' application/x-www-form-urlencoded')
-                                        xhr.send("")
-                                    })
                                 })
                             })
                         } else
@@ -84,9 +64,9 @@ function createCode() {
             }
             if (!flag && count <= 20) {
                 count++
-                ID = setTimeout(getInfo, 500)
+                poll = setTimeout(getInfo, 500)
             } else if (count > 20) {
-                clearTimeout(ID)
+                clearTimeout(poll)
                 document.getElementById("code").innerHTML = "<h1>Timeout!</h1>" + "<p>Please click again.</p>"
             }
         }
