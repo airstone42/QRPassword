@@ -250,8 +250,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(this, "Canceled", Toast.LENGTH_LONG).show();
             } else {
                 Log.d("MainActivity", "Scanned");
-                String codeContent = new String(Base64.decode(result.getContents(), Base64.DEFAULT));
                 try {
+                    String codeContent = new String(Base64.decode(result.getContents(), Base64.DEFAULT));
                     JSONObject codeJSON = new JSONObject(codeContent);
                     String sessionID = codeJSON.getString("id");
                     String secretKey = codeJSON.getString("skey");
@@ -282,7 +282,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Toast.makeText(this, "Empty database", Toast.LENGTH_LONG).show();
                     }
                     // Toast.makeText(this, hostname + " " + id, Toast.LENGTH_LONG).show();
-                } catch (JSONException e) {
+                } catch (Exception e) {
                     Toast.makeText(this, "Failed", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }

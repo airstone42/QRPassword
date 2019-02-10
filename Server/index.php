@@ -1,6 +1,7 @@
 <?php
 $redis = new Redis();
 $redis->connect('127.0.0.1', 6379);
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     header('Access-Control-Allow-Origin:*');
     header('Content-type:text/html;charset=utf-8');
@@ -8,12 +9,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($info) && strlen($info['id']) === 16) {
         if ($info['hostname'] && $info['username'] && $info['password']) {
             extract($info);
-            if (!$redis->exists($id)) {
-                $redis->hMSet($id, array('hostname' => $hostname, 'username' => $username, 'password' => $password));
-            } else {
+            if ($redis->exists($id))
                 $redis->del($id);
-                $redis->hMSet($id, array('hostname' => $hostname, 'username' => $username, 'password' => $password));
-            }
+            $redis->hMSet($id, array('hostname' => $hostname, 'username' => $username, 'password' => $password));
         }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -29,4 +27,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         include('example.php');
     }
 }
+
 $redis->close();

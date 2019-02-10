@@ -30,7 +30,6 @@ function createCode() {
             hostname: encrypt(secretKey, initVector, url.hostname)
         }
         code.makeCode(btoa(JSON.stringify(codeContent)))
-        console.log(JSON.stringify(codeContent))
         let poll = 0
         let getInfo = () => {
             let xhr = new XMLHttpRequest()
