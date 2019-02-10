@@ -255,8 +255,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     JSONObject codeJSON = new JSONObject(codeContent);
                     String sessionID = codeJSON.getString("id");
                     String secretKey = codeJSON.getString("skey");
-                    String initVector = codeJSON.getString("iv");
-                    String hostname = Crypto.decrypt(secretKey, initVector, codeJSON.getString("hostname"));
+                    String initVector = "0000000000000000";
+                    String hostname = codeJSON.getString("hostname");
                     String username, password;
                     Cursor cursor = dbHelper.getListData();
                     boolean found = false;

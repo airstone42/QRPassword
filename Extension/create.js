@@ -7,9 +7,9 @@ const code = new QRCode(document.getElementById('code'), {
     correctLevel: QRCode.CorrectLevel.H
 })
 
-const sessionID = rand(16)
+const sessionID = rand(8)
 const secretKey = rand(16)
-const initVector = rand(16)
+const initVector = "0000000000000000"
 
 function rand(n) {
     let rand = ""
@@ -26,8 +26,7 @@ function createCode() {
         const codeContent = {
             id: sessionID,
             skey: secretKey,
-            iv: initVector,
-            hostname: encrypt(secretKey, initVector, url.hostname)
+            hostname: url.hostname
         }
         code.makeCode(btoa(JSON.stringify(codeContent)))
         let poll = 0
@@ -40,7 +39,7 @@ function createCode() {
                 if (xhr.readyState === 4 && xhr.status === 200) {
                     if (xhr.responseText) {
                         const infoJSON = JSON.parse(xhr.responseText)
-                        if (infoJSON.hostname === codeContent.hostname) {
+                        if (codeContent.hostname === decrypt(secretKey, initVector, infoJSON.hostname)) {
                             clearTimeout(poll)
                             flag = true
                             chrome.tabs.query({
@@ -48,8 +47,8 @@ function createCode() {
                                 currentWindow: true
                             }, tabs => {
                                 chrome.tabs.sendMessage(tabs[0].id, {
-                                    username: decrypt(codeContent.skey, codeContent.iv, infoJSON.username),
-                                    password: decrypt(codeContent.skey, codeContent.iv, infoJSON.password)
+                                    username: decrypt(secretKey, initVector, infoJSON.username),
+                                    password: decrypt(secretKey, initVector, infoJSON.password)
                                 }, function(response) {
                                     console.log(response.success)
                                 })
