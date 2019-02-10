@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
-    "name": "QR-Code Creator",
+    "name": "QRPassword",
     "version": "0.1.0",
-    "description": "An extension to process encrypted password information from Android by communicating in QR Code, and auto fill them in web pages.",
+    "description": "An extension for transmitting sensitive information from a phone to a desktop browser",
     "icons": {
         "1": "images/popup.png"
     },
