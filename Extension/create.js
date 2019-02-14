@@ -28,7 +28,7 @@ function createCode() {
             skey: secretKey,
             hostname: url.hostname
         }
-        code.makeCode(btoa(JSON.stringify(codeContent)))
+        code.makeCode(encode(codeContent))
         let poll = 0
         let getInfo = () => {
             let xhr = new XMLHttpRequest()

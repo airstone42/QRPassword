@@ -36,5 +36,9 @@ public class Crypto {
         return null;
     }
 
+    public static String parse(String encoded) {
+        return new String(Base64.decode(encoded, Base64.DEFAULT));
+    }
+
     public static void main(String[] args) { }
 }

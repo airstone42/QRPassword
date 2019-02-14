@@ -251,7 +251,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } else {
                 Log.d("MainActivity", "Scanned");
                 try {
-                    String codeContent = new String(Base64.decode(result.getContents(), Base64.DEFAULT));
+                    String codeContent = Crypto.parse(result.getContents());
                     JSONObject codeJSON = new JSONObject(codeContent);
                     String sessionID = codeJSON.getString("id");
                     String secretKey = codeJSON.getString("skey");

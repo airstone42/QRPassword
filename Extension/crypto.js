@@ -11,3 +11,7 @@ function decrypt(secretKey, initVector, encrypted) {
     const plain = CryptoJS.AES.decrypt(encrypted, key, {iv: iv})
     return plain.toString(CryptoJS.enc.Utf8)
 }
+
+function encode(origin) {
+    return btoa(JSON.stringify(origin))
+}
