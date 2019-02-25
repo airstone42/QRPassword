@@ -1,0 +1,12 @@
+{
+  "name": "Server",
+  "version": "1.0.0",
+  "main": "app.js",
+  "dependencies": {
+    "redis": "^2.8.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "serve": "node app.js"
+  }
+}
