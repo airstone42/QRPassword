@@ -10,7 +10,7 @@ const client = redis.createClient(6379, '127.0.0.1')
 
 client.on('error', (err) => {
     throw err
-});
+})
 
 const server = http.createServer((req, res) => {
     if (req.method === 'POST') {
@@ -25,11 +25,10 @@ const server = http.createServer((req, res) => {
         })
         req.on('end', () => {
             post = JSON.parse(post)
-            // console.log(post)
             if (post.id && post.id.length === 8) {
                 if (post.hostname && post.username && post.password) {
                     client.get(post.id, (err, value) => {
-                        if (err) throw err;
+                        if (err) throw err
                         if (value) client.del(post.id)
                         client.hmset(post.id, {
                             'hostname': post.hostname,
@@ -47,12 +46,14 @@ const server = http.createServer((req, res) => {
                 'Content-Type': 'application/json',
                 'charset': 'utf-8'
             })
-            // console.log(url.parse(req.url, true).query.id)
             client.hgetall(url.parse(req.url, true).query.id, (err, value) => {
                 if (err) throw err
-                // console.log(value)
-                res.end(JSON.stringify(value))
-                client.del(url.parse(req.url, true).query.id)
+                if (value) {
+                    res.end(JSON.stringify(value))
+                    client.del(url.parse(req.url, true).query.id)
+                } else {
+                    res.end()
+                }
             })
         } else {
             res.writeHead(200, {
@@ -72,7 +73,7 @@ server.listen(port, hostname, () => {
 })
 
 process.on('SIGINT', function() {
-    client.quit();
-    console.log('\nServer closed');
-    process.exit();
-});
+    client.quit()
+    console.log('\nServer closed')
+    process.exit()
+})
