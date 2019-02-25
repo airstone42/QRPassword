@@ -16,10 +16,11 @@ The server-side program behaves differently when visited in different HTTP metho
 - Android (API Level 26)
 - Chromium
 - Redis
-- PHP & php-redis
+- Node.js & npm
+- node_redis (install with npm)
 
 ## Usage & Process
-Make sure that desktop and Android device can access the same server, assuming it is ```192.168.0.2```.
+Make sure that desktop and Android device can access the same server, assuming it is ```192.168.0.2:3000```.
 
 1. Add your username and password information in Android application.
 
