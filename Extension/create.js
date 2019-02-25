@@ -1,4 +1,4 @@
-const serverURL = 'http://192.168.0.2/extension'
+const serverURL = 'http://192.168.0.2:3000'
 
 const code = new QRCode(document.getElementById('code'), {
     width: 300,

@@ -47,7 +47,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    String serverURL = "http://192.168.0.2/extension/";
+    String serverURL = "http://192.168.0.2:3000/";
     final DatabaseHelper dbHelper = new DatabaseHelper(this, "data.db", null, 1);
 
     @Override
