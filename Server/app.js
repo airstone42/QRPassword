@@ -70,3 +70,9 @@ const server = http.createServer((req, res) => {
 server.listen(port, hostname, () => {
     console.log(`Server running at http://${hostname}:${port}/`)
 })
+
+process.on('SIGINT', function() {
+    client.quit();
+    console.log('\nServer closed');
+    process.exit();
+});
