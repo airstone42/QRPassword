@@ -1,4 +1,4 @@
-const serverURL = "http://192.168.0.2/extension"
+const serverURL = 'http://192.168.0.2/extension'
 
 const code = new QRCode(document.getElementById('code'), {
     width: 300,
@@ -9,10 +9,10 @@ const code = new QRCode(document.getElementById('code'), {
 
 const sessionID = rand(8)
 const secretKey = rand(16)
-const initVector = "0000000000000000"
+const initVector = '0000000000000000'
 
 function rand(n) {
-    let rand = ""
+    let rand = ''
     for(let i = 0; i < n; i++)
         rand += Math.floor(Math.random() * 10)
     return rand
@@ -32,7 +32,7 @@ function createCode() {
         let poll = 0
         let getInfo = () => {
             let xhr = new XMLHttpRequest()
-            xhr.open("GET", serverURL + "/?id=" + codeContent.id)
+            xhr.open('GET', serverURL + '/?id=' + codeContent.id)
             xhr.setRequestHeader('Content-Type',' application/x-www-form-urlencoded')
             xhr.send()
             xhr.onreadystatechange = () => {
@@ -65,7 +65,7 @@ function createCode() {
                 poll = setTimeout(getInfo, 500)
             } else if (count > 20) {
                 clearTimeout(poll)
-                document.getElementById("code").innerHTML = "<h1>Timeout!</h1>" + "<p>Please click again.</p>"
+                document.getElementById('code').innerHTML = '<h1>Timeout!</h1>' + '<p>Please click again.</p>'
             }
         }
         getInfo()

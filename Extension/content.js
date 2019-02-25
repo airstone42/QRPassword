@@ -1,5 +1,5 @@
-const usernames = ["name", "mail", "Name", "Mail"]
-const passwords = ["pass", "Pass"]
+const usernames = ['name', 'mail', 'Name', 'Mail']
+const passwords = ['pass', 'Pass']
 
 function isUsername(item) {
     let flag = false
@@ -18,9 +18,9 @@ function isPassword(item) {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     let list = document.getElementsByTagName('input')
     for (let i = 0; i < list.length && list[i]; i++) {
-        if (list[i].type === "text" && isUsername(list[i])) {
+        if (list[i].type === 'text' && isUsername(list[i])) {
             list[i].value = request.username
-        } else if (list[i].type === "password" && isPassword(list[i])) {
+        } else if (list[i].type === 'password' && isPassword(list[i])) {
             list[i].value = request.password
         }
     }
