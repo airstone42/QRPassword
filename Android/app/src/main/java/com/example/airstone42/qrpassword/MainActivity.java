@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
-import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -34,7 +33,6 @@ import com.example.airstone42.qrpassword.classes.PasswordData;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -114,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             View addDataDialog = View.inflate(MainActivity.this, R.layout.dialog_data, null);
             TextView title = new TextView(MainActivity.this);
             title.setPadding(0, 50, 0, 0);
-            title.setText("Add new data");
+            title.setText(R.string.action_add);
             title.setTextSize(24);
             title.setTextColor(Color.BLACK);
             title.setGravity(Gravity.CENTER);
@@ -153,17 +151,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_import) {
             return true;
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_export) {
             return true;
-        } else if (id == R.id.nav_slideshow) {
-            return true;
-        } else if (id == R.id.nav_manage) {
-            return true;
-        } else if (id == R.id.nav_share) {
-            return true;
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.nav_about) {
             return true;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -194,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 View addDataDialog = View.inflate(MainActivity.this, R.layout.dialog_data, null);
                 TextView title = new TextView(MainActivity.this);
                 title.setPadding(0, 50, 0, 0);
-                title.setText("View data");
+                title.setText(R.string.action_view);
                 title.setTextSize(24);
                 title.setTextColor(Color.BLACK);
                 title.setGravity(Gravity.CENTER);
