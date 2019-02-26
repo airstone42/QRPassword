@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class DataAdapter extends ArrayAdapter<PasswordData> {
+
     private int resourseId;
 
     public DataAdapter(Context context, int textViewResourceId, List<PasswordData> objects) {
@@ -32,4 +33,5 @@ public class DataAdapter extends ArrayAdapter<PasswordData> {
         itemUsername.setText(passwordData.getUsername());
         return view;
     }
+
 }

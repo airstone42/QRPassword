@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.widget.Toast;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
+
     private static final String CREATE_PASSWD = "create table passwd ("
             + "id integer primary key autoincrement, "
             + "website text, "
@@ -15,7 +16,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + "password text)";
 
     private Context mContext;
-    
+
     DatabaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
         mContext = context;
@@ -28,11 +29,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-    }
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) { }
 
-    Cursor getListData(){
+    Cursor getListData() {
         SQLiteDatabase db = this.getWritableDatabase();
         return db.rawQuery("select * from passwd", null);
     }
+
 }

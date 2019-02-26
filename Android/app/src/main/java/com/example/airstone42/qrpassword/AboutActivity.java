@@ -10,6 +10,7 @@ import android.view.View;
 import java.util.Objects;
 
 public class AboutActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,28 +22,21 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-    }
+    protected void onResume() { super.onResume(); }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-    }
+    protected void onPause() { super.onPause(); }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
+    protected void onDestroy() { super.onDestroy(); }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-    }
+    protected void onSaveInstanceState(Bundle outState) { super.onSaveInstanceState(outState); }
 
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
     }
+
 }

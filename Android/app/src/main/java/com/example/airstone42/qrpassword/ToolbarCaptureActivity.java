@@ -11,6 +11,7 @@ import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import java.util.Objects;
 
 public class ToolbarCaptureActivity extends AppCompatActivity {
+
     private CaptureManager capture;
     private DecoratedBarcodeView barcodeScannerView;
 
@@ -64,4 +65,5 @@ public class ToolbarCaptureActivity extends AppCompatActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         return barcodeScannerView.onKeyDown(keyCode, event) || super.onKeyDown(keyCode, event);
     }
+
 }

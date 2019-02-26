@@ -45,6 +45,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
     String serverURL = "http://192.168.0.2:3000/";
     final DatabaseHelper dbHelper = new DatabaseHelper(this, "data.db", null, 1);
 
@@ -52,8 +53,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -74,15 +77,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final List<PasswordData> dataList = new ArrayList<>();
         Cursor cursor = dbHelper.getListData();
         if (cursor.getCount() != 0) {
-            while (cursor.moveToNext()){
+            while (cursor.moveToNext()) {
                 PasswordData passwordData = new PasswordData(Integer.parseInt(cursor.getString(0)), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getString(4));
                 dataList.add(passwordData);
                 DataAdapter dataAdapter = new DataAdapter(this, R.layout.list_item, dataList);
                 listView.setAdapter(dataAdapter);
             }
         } else {
-        DataAdapter dataAdapter = new DataAdapter(this, R.layout.list_item, dataList);
-        listView.setAdapter(dataAdapter);
+            DataAdapter dataAdapter = new DataAdapter(this, R.layout.list_item, dataList);
+            listView.setAdapter(dataAdapter);
         }
 
         showListView();
@@ -107,8 +110,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+
         if (id == R.id.action_add) {
             final AlertDialog.Builder addData = new AlertDialog.Builder(MainActivity.this);
+
             View addDataDialog = View.inflate(MainActivity.this, R.layout.dialog_data, null);
             TextView title = new TextView(MainActivity.this);
             title.setPadding(0, 50, 0, 0);
@@ -116,10 +121,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             title.setTextSize(24);
             title.setTextColor(Color.BLACK);
             title.setGravity(Gravity.CENTER);
+
             final EditText editWebsite = (EditText) addDataDialog.findViewById(R.id.add_data_website);
             final EditText editUrl = (EditText) addDataDialog.findViewById(R.id.add_data_url);
             final EditText editUsername = (EditText) addDataDialog.findViewById(R.id.add_data_username);
             final EditText editPassword = (EditText) addDataDialog.findViewById(R.id.add_data_password);
+
             addData.setCustomTitle(title);
             addData.setView(addDataDialog);
             addData.setCancelable(true);
@@ -144,10 +151,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             });
             addData.show();
         }
+
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -159,6 +166,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent intent = new Intent(this, AboutActivity.class);
             startActivity(intent);
         }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -169,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         final List<PasswordData> dataList = new ArrayList<>();
         Cursor data = dbHelper.getListData();
         if (data.getCount() != 0) {
-            while (data.moveToNext()){
+            while (data.moveToNext()) {
                 PasswordData passwordData = new PasswordData(Integer.parseInt(data.getString(0)), data.getString(1), data.getString(2), data.getString(3), data.getString(4));
                 dataList.add(passwordData);
                 DataAdapter dataAdapter = new DataAdapter(this, R.layout.list_item, dataList);
@@ -179,11 +187,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             DataAdapter dataAdapter = new DataAdapter(this, R.layout.list_item, dataList);
             listView.setAdapter(dataAdapter);
         }
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 final PasswordData passwordData = dataList.get(position);
                 AlertDialog.Builder viewData = new AlertDialog.Builder(MainActivity.this);
+
                 View addDataDialog = View.inflate(MainActivity.this, R.layout.dialog_data, null);
                 TextView title = new TextView(MainActivity.this);
                 title.setPadding(0, 50, 0, 0);
@@ -191,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 title.setTextSize(24);
                 title.setTextColor(Color.BLACK);
                 title.setGravity(Gravity.CENTER);
+
                 final EditText editWebsite = (EditText) addDataDialog.findViewById(R.id.add_data_website);
                 editWebsite.setText(passwordData.getWebsite());
                 final EditText editUrl = (EditText) addDataDialog.findViewById(R.id.add_data_url);
@@ -199,6 +210,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 editUsername.setText(passwordData.getUsername());
                 final EditText editPassword = (EditText) addDataDialog.findViewById(R.id.add_data_password);
                 editPassword.setText(passwordData.getPassword());
+
                 viewData.setCustomTitle(title);
                 viewData.setView(addDataDialog);
                 viewData.setCancelable(true);
@@ -211,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         values.put("url", editUrl.getText().toString());
                         values.put("username", editUsername.getText().toString());
                         values.put("password", editPassword.getText().toString());
-                        db.update("passwd", values, "id = ?", new String[]  { Integer.toString(passwordData.getId()) });
+                        db.update("passwd", values, "id = ?", new String[]{Integer.toString(passwordData.getId())});
                         values.clear();
                         showListView();
                     }
@@ -220,7 +232,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         SQLiteDatabase db = dbHelper.getWritableDatabase();
-                        db.delete("passwd", "id = ?", new String[] { Integer.toString(passwordData.getId()) });
+                        db.delete("passwd", "id = ?", new String[]{Integer.toString(passwordData.getId())});
                         showListView();
                     }
                 });
@@ -237,8 +249,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if(result != null) {
-            if(result.getContents() == null) {
+        if (result != null) {
+            if (result.getContents() == null) {
                 Log.d("MainActivity", "Canceled scan");
                 Toast.makeText(this, "Canceled", Toast.LENGTH_LONG).show();
             } else {
@@ -250,10 +262,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     String initVector = "0000000000000000";
                     String hostname = content.getHostname();
                     String username, password;
+
                     Cursor cursor = dbHelper.getListData();
                     boolean found = false;
                     if (cursor.getCount() != 0) {
-                        while (cursor.moveToNext()){
+                        while (cursor.moveToNext()) {
                             if (cursor.getString(2).equals("http://" + hostname) || cursor.getString(2).equals("https://" + hostname)) {
                                 found = true;
                                 username = cursor.getString(3);

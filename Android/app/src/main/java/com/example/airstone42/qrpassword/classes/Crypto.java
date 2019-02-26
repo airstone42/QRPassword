@@ -3,11 +3,13 @@ package com.example.airstone42.qrpassword.classes;
 import android.util.Base64;
 
 import java.nio.charset.StandardCharsets;
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class Crypto {
+
     public static class CodeContent {
         private String sessionID;
         private String secretKey;
@@ -61,8 +63,9 @@ public class Crypto {
     }
 
     public static CodeContent parse(String encoded) {
-        return new CodeContent(encoded.substring(0,8), encoded.substring(8, 24), encoded.substring(24));
+        return new CodeContent(encoded.substring(0, 8), encoded.substring(8, 24), encoded.substring(24));
     }
 
     public static void main(String[] args) { }
+
 }
