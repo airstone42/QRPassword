@@ -1,4 +1,19 @@
+class CodeContent {
+    constructor(id, skey, hostname) {
+        this.id = id
+        this.skey = skey
+        this.hostname = hostname
+    }
+    toString() {
+        return this.id + this.skey + this.hostname
+    }
+}
+
 const serverURL = 'http://192.168.0.2:3000'
+
+const sessionID = rand(8)
+const secretKey = rand(16)
+const initVector = '0000000000000000'
 
 const code = new QRCode(document.getElementById('code'), {
     width: 300,
@@ -6,10 +21,6 @@ const code = new QRCode(document.getElementById('code'), {
     useSVG: true,
     correctLevel: QRCode.CorrectLevel.H
 })
-
-const sessionID = rand(8)
-const secretKey = rand(16)
-const initVector = '0000000000000000'
 
 function rand(n) {
     let rand = ''
@@ -23,12 +34,9 @@ function createCode() {
     let flag = false
     chrome.tabs.query({active: true}, tab => {
         const url = new URL(tab[0].url)
-        const codeContent = {
-            id: sessionID,
-            skey: secretKey,
-            hostname: url.hostname
-        }
-        code.makeCode(encode(codeContent))
+        const codeContent = new CodeContent(sessionID, secretKey, url.hostname)
+        code.makeCode(codeContent.toString())
+        console.log(codeContent.toString())
         let poll = 0
         let getInfo = () => {
             let xhr = new XMLHttpRequest()
