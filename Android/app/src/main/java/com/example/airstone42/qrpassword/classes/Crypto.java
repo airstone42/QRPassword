@@ -8,6 +8,30 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 public class Crypto {
+    public static class CodeContent {
+        private String sessionID;
+        private String secretKey;
+        private String hostname;
+
+        CodeContent(String sessionID, String secretKey, String hostname) {
+            this.sessionID = sessionID;
+            this.secretKey = secretKey;
+            this.hostname = hostname;
+        }
+
+        public String getSessionID() {
+            return sessionID;
+        }
+
+        public String getSecretKey() {
+            return secretKey;
+        }
+
+        public String getHostname() {
+            return hostname;
+        }
+    }
+
     public static String encrypt(String secretKey, String initVector, String plain) {
         try {
             IvParameterSpec iv = new IvParameterSpec(initVector.getBytes(StandardCharsets.UTF_8));
@@ -36,8 +60,8 @@ public class Crypto {
         return null;
     }
 
-    public static String parse(String encoded) {
-        return new String(Base64.decode(encoded, Base64.DEFAULT));
+    public static CodeContent parse(String encoded) {
+        return new CodeContent(encoded.substring(0,8), encoded.substring(8, 24), encoded.substring(24));
     }
 
     public static void main(String[] args) { }

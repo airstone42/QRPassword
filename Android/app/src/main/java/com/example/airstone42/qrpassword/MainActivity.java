@@ -251,12 +251,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } else {
                 Log.d("MainActivity", "Scanned");
                 try {
-                    String codeContent = Crypto.parse(result.getContents());
-                    JSONObject codeJSON = new JSONObject(codeContent);
-                    String sessionID = codeJSON.getString("id");
-                    String secretKey = codeJSON.getString("skey");
+                    Crypto.CodeContent content = Crypto.parse(result.getContents());
+                    String sessionID = content.getSessionID();
+                    String secretKey = content.getSecretKey();
                     String initVector = "0000000000000000";
-                    String hostname = codeJSON.getString("hostname");
+                    String hostname = content.getHostname();
                     String username, password;
                     Cursor cursor = dbHelper.getListData();
                     boolean found = false;

@@ -36,7 +36,6 @@ function createCode() {
         const url = new URL(tab[0].url)
         const codeContent = new CodeContent(sessionID, secretKey, url.hostname)
         code.makeCode(codeContent.toString())
-        console.log(codeContent.toString())
         let poll = 0
         let getInfo = () => {
             let xhr = new XMLHttpRequest()
