@@ -16,9 +16,9 @@ public class Crypto {
         private String hostname;
 
         CodeContent(String sessionID, String secretKey, String hostname) {
-            this.sessionID = sessionID;
-            this.secretKey = secretKey;
-            this.hostname = hostname;
+            this.sessionID = String.valueOf(Integer.parseInt(sessionID, 16));
+            this.secretKey = String.valueOf(Long.parseLong(secretKey, 16));
+            this.hostname = new String(Base64.decode(hostname, Base64.DEFAULT));
         }
 
         public String getSessionID() {
@@ -63,7 +63,7 @@ public class Crypto {
     }
 
     public static CodeContent parse(String encoded) {
-        return new CodeContent(encoded.substring(0, 8), encoded.substring(8, 24), encoded.substring(24));
+        return new CodeContent(encoded.substring(0, 7), encoded.substring(7, 21), encoded.substring(21));
     }
 
     public static void main(String[] args) { }

@@ -5,7 +5,9 @@ class CodeContent {
         this.hostname = hostname
     }
     toString() {
-        return this.id + this.skey + this.hostname
+        let hexid = ('0000000' + parseInt(this.id).toString(16).toUpperCase()).slice(-7)
+        let hexkey = ('00000000000000' + parseInt(this.skey).toString(16).toUpperCase()).slice(-14)
+        return hexid + hexkey + btoa(this.hostname)
     }
 }
 
