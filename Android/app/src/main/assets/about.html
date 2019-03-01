@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>QR Password</title>
+</head>
+<body>
+<h1>QR Password</h1>
+<p>A set of programs for transmitting sensitive information from a phone(Android) to a desktop browser(Chrome).</p>
+<h2>Introduction</h2>
+<p>There are three programs in this repository, including an Android application, a Chrome extension, and a server-side program.</p>
+<p>The Android application is a simple password manager with basic CRUD functions and QR code reading function mainly. Please note that this password manager is not completely secure, because it stores passwords in plain text in the SQLite
+    database. If your Android device has been rooted, then the database file can be accessed by others. So please make sure that your Android device is not rooted when you are using these programs.</p>
+<p>The Chrome extension is a QR code generator. After generating QR code contains the key for encryption, it polls the server for encrypted information uploaded sensitive information by Android device and decrypts it. Finally, it auto fills the
+    form with sensitive information including username and password. Please note that this program is not available on web pages that use react, Vue.js, etc.</p>
+<p>The server-side program behaves differently when visited in different HTTP methods. When POST by Android device, it temporarily stores encrypted sensitive information in the Redis database. When GET by Chrome extension with a query string
+    like "/?id=", it searches and returns corresponding information in Redis when it exists. When GET in a common way, it shows a web page with a login form for testing.</p>
+<h2>Dependencies</h2>
+<ul>
+    <li>Android (API Level 26)</li>
+    <li>Chromium</li>
+    <li>Redis</li>
+    <li>Node.js &amp; npm</li>
+    <li>node_redis (install with npm)</li>
+</ul>
+<h2>Usage &amp; Process</h2>
+<p>Make sure that desktop and Android device can access the same server, assuming it is <code>192.168.0.2:3000</code>.</p>
+<ol>
+    <li>
+        <p>Add your username and password information in Android application.</p>
+    </li>
+    <li>
+        <p>Click the Chrome extension button when you are on the login page. After showing the QR code contains key and initial vector for AES 128 CBC encryption algorithm, hostname, and a random ID on the pop-up web page, it starts polling the
+            server with ID to search for encrypted information from Android device, which lasts 10 seconds.</p>
+    </li>
+    <li>
+        <p>Click the float action button in Android application, then scan the QR code on the pop-up web page. It searches the corresponding row in the database, then encrypts information with key and initial vector and send encrypted
+            information to the server.</p>
+    </li>
+    <li>
+        <p>The server temporarily stores information from Android application. When polled by Chrome extension with ID, it returns information to the Chrome extension and deletes that row.</p>
+    </li>
+    <li>
+        <p>Chrome extension stops polling and decrypts information, then fill the form with it.</p>
+    </li>
+</ol>
+<h2>Open Source Licenses</h2>
+    <a href="https://github.com/airstone42/QRPassword/blob/master/LICENSE">MIT</a>
+    <ul>
+        <li>zxing: <a href="https://github.com/zxing/zxing/blob/master/LICENSE">APL 2.0</a>&nbsp;</li>
+        <li>zxing-android-embedded: <a href="https://github.com/journeyapps/zxing-android-embedded/blob/master/README.md">APL 2.0</a>&nbsp;</li>
+        <li>okhttp: <a href="https://github.com/square/okhttp/blob/master/LICENSE.txt">APL 2.0</a>&nbsp;</li>
+    </ul>
+</body>
+</html>

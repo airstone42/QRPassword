@@ -1,4 +1,4 @@
-# QRPassword
+# QR Password
 
 A set of programs for transmitting sensitive information from a phone(Android) to a desktop browser(Chrome).
 
