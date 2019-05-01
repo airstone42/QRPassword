@@ -1,4 +1,5 @@
 *.iml
+.DS_Store
 .idea
 /Android/.gradle
 /Android/local.properties
@@ -6,3 +7,4 @@
 /Android/build
 /Android/captures
 /Android/.externalNativeBuild
+/Server/node_modules
